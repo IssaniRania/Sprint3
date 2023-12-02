@@ -71,11 +71,11 @@ public class CoursController {
             return ResponseEntity.status(500).body("Erreur lors de l'ajout du cours : " + e.getMessage());
         }
     }
-    @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateCours(@PathVariable String id, @RequestBody Cours updatedCours) {
-        coursService.updateCours(id, updatedCours);
-        return ResponseEntity.ok("Cours updated successfully");
-    }
+//    @PutMapping("/update/{id}")
+//    public ResponseEntity<String> updateCours(@PathVariable String id, @RequestBody Cours updatedCours) {
+//        coursService.updateCours(id, updatedCours);
+//        return ResponseEntity.ok("Cours updated successfully");
+//    }
     //put
 //    @PutMapping("/updateCours/{_id}")
 //    public ResponseEntity<String> updateCours(

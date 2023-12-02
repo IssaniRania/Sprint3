@@ -3,6 +3,7 @@ package com.example.sprint3.Service;
 import com.example.sprint3.DAO.CoursRepository;
 import com.example.sprint3.Entity.Cours;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,8 +24,7 @@ public class CoursService {
             // Save the updated document
             coursRepository.save(existingCours);
         } else {
-            // Handle the case when the document is not found
-            // You can throw an exception or handle it based on your requirements
+
         }
     }
 }
