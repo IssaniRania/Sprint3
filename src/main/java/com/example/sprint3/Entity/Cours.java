@@ -9,21 +9,42 @@ import org.springframework.data.rest.core.config.Projection;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 
 @Document(collection = "cours")
 @TypeAlias("")
 public class Cours {
     @Id
-    private ObjectId _id;
+    private String id;
     private String nom;
     private String description;
-    private  byte[] fichier;
-    public ObjectId getId() {
-        return _id;
+    private Date datedebut;
+    private Date datefin;
+
+    public Date getDatedebut() {
+        return datedebut;
     }
 
-    public void setId(ObjectId id) {
-        this._id = id;
+    public void setDatedebut(Date datedebut) {
+        this.datedebut = datedebut;
+    }
+
+    public Date getDatefin() {
+        return datefin;
+    }
+
+    public void setDatefin(Date datefin) {
+        this.datefin = datefin;
+    }
+
+    private byte[] fichier;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getNom() {
@@ -54,6 +75,5 @@ public class Cours {
     interface CoursProjection extends Projection{
         public Long getId();
         public String getNom();
-        public String getFichier ();
     }
 }
