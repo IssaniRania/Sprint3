@@ -1,5 +1,6 @@
 package com.example.sprint3.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -19,6 +20,7 @@ public class Cours {
     private String id;
     private String nom;
     private String description;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date datedebut;
     private Date datefin;
 

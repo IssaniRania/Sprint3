@@ -2,13 +2,10 @@ package com.example.sprint3.Controller;
 
 import com.example.sprint3.DAO.CoursRepository;
 import com.example.sprint3.Entity.Cours;
-import com.example.sprint3.Service.CoursService;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +17,6 @@ import java.util.Optional;
 @RequestMapping("/cours")
 public class CoursController {
     private final CoursRepository coursRepository;
-    CoursService coursService;
 
     @Autowired
     public CoursController(CoursRepository coursRepository) {
@@ -72,23 +68,21 @@ public class CoursController {
             return ResponseEntity.status(500).body("Erreur lors de l'ajout du cours : " + e.getMessage());
         }
     }
-    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-public ResponseEntity<Cours> replaceCours(
-        @PathVariable String id,
-        @RequestPart("nom") String nom,
-        @RequestPart("description") String description,
-        @RequestPart("fichier") MultipartFile fichier,
-        @RequestPart("datedebut") Date datedebut,
-        @RequestPart("datefin") Date datefin) {
+    @PostMapping(value = "/updateCours/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Cours> replaceCours(
+            @PathVariable String id,
+            @RequestPart("nom") String nom,
+            @RequestPart("description") String description,
+            @RequestPart("fichier") MultipartFile fichier,
+            @RequestPart(name = "datedebut", required = false) Date datedebut,
+            @RequestPart(name ="datefin", required = false) Date datefin) {
 
     Optional<Cours> existingCours = coursRepository.findById(id);
 
     if (existingCours.isPresent()) {
         Cours cours = existingCours.get();
-
-        // Validation (exemple : vérification des champs non nuls)
-        if (nom != null) {
-            cours.setNom(nom);
+        if (nom != null)
+      {      cours.setNom(nom);
         }
 
         if (description != null) {
