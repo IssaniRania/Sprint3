@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.rest.core.config.Projection;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.processing.Generated;
 import java.io.IOException;
 import java.util.Date;
 

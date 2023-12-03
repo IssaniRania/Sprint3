@@ -6,6 +6,7 @@ import com.example.sprint3.Service.CoursService;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -71,45 +72,33 @@ public class CoursController {
             return ResponseEntity.status(500).body("Erreur lors de l'ajout du cours : " + e.getMessage());
         }
     }
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity<String> updateCours(@PathVariable String id, @RequestBody Cours updatedCours) {
-//        coursService.updateCours(id, updatedCours);
+//    @PutMapping("/update/{nom}")
+//    public ResponseEntity<String> updateCours(@PathVariable String nom, @RequestBody Cours updatedCours) {
+//        coursService.updateCoursByName(nom, updatedCours);
 //        return ResponseEntity.ok("Cours updated successfully");
 //    }
-    //put
-//    @PutMapping("/updateCours/{_id}")
-//    public ResponseEntity<String> updateCours(
-//            @PathVariable String _id,
-//            @RequestPart("updatedCours") Cours updatedCours,
-//            @RequestPart("fichier") MultipartFile fichier
-//    ) {
-//        System.out.println("Attempting to update course with ID: " + _id);
-//
-//        try {
-//            Optional<Cours> existingCours = coursRepository.findById(new ObjectId(_id));
-//
-//            if (existingCours.isPresent()) {
-//                Cours existingCourse = existingCours.get();
-//
-//                // Set the fields you want to update from updatedCours
-//                existingCourse.setNom(updatedCours.getNom());
-//                existingCourse.setDescription(updatedCours.getDescription());
-//
-//                // Update the fichier only if a new file is provided
-//                if (!fichier.isEmpty()) {
-//                    existingCourse.setFichier(fichier.getBytes());
-//                }
-//
-//                // Save the updated course
-//                coursRepository.save(existingCourse);
-//
-//                return ResponseEntity.ok("Course updated successfully");
-//            } else {
-//                return ResponseEntity.status(404).body("Course not found with ID: " + _id);
-//            }
-//        } catch (Exception e) {
-//            return ResponseEntity.status(500).body("Error updating course: " + e.getMessage());
-//        }
-//    }
+@PutMapping("/update/{id}")
+public ResponseEntity<Cours> replaceCours(@RequestBody Cours newCours, @PathVariable String id) {
+    Optional<Cours> existingCours = coursRepository.findById(id);
 
+    if (existingCours.isPresent()) {
+        Cours cours = existingCours.get();
+        cours.setNom(newCours.getNom());
+        cours.setDescription(newCours.getDescription());
+        cours.setFichier(newCours.getFichier());
+        cours.setDatefin(newCours.getDatefin());
+        cours.setDatedebut(newCours.getDatedebut());
+
+        Cours updatedCours = coursRepository.save(cours);
+        return ResponseEntity.ok(updatedCours);
+    } else {
+        return ResponseEntity.notFound().build();
+    }
 }
+
+    @DeleteMapping("/delete/{id}")
+    void deleteEmployee(@PathVariable String id) {
+        coursRepository.deleteById(id);
+    }
+}
+
