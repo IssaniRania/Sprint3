@@ -97,7 +97,7 @@ public ResponseEntity<Cours> replaceCours(@RequestBody Cours newCours, @PathVari
 }
 
     @DeleteMapping("/delete/{id}")
-    void deleteEmployee(@PathVariable String id) {
+    void deleteCours(@PathVariable String id) {
         coursRepository.deleteById(id);
     }
 }
