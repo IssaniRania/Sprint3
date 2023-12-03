@@ -72,29 +72,55 @@ public class CoursController {
             return ResponseEntity.status(500).body("Erreur lors de l'ajout du cours : " + e.getMessage());
         }
     }
-//    @PutMapping("/update/{nom}")
-//    public ResponseEntity<String> updateCours(@PathVariable String nom, @RequestBody Cours updatedCours) {
-//        coursService.updateCoursByName(nom, updatedCours);
-//        return ResponseEntity.ok("Cours updated successfully");
-//    }
-@PutMapping("/update/{id}")
-public ResponseEntity<Cours> replaceCours(@RequestBody Cours newCours, @PathVariable String id) {
+    @PutMapping(value = "/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+public ResponseEntity<Cours> replaceCours(
+        @PathVariable String id,
+        @RequestPart("nom") String nom,
+        @RequestPart("description") String description,
+        @RequestPart("fichier") MultipartFile fichier,
+        @RequestPart("datedebut") Date datedebut,
+        @RequestPart("datefin") Date datefin) {
+
     Optional<Cours> existingCours = coursRepository.findById(id);
 
     if (existingCours.isPresent()) {
         Cours cours = existingCours.get();
-        cours.setNom(newCours.getNom());
-        cours.setDescription(newCours.getDescription());
-        cours.setFichier(newCours.getFichier());
-        cours.setDatefin(newCours.getDatefin());
-        cours.setDatedebut(newCours.getDatedebut());
 
-        Cours updatedCours = coursRepository.save(cours);
-        return ResponseEntity.ok(updatedCours);
+        // Validation (exemple : vérification des champs non nuls)
+        if (nom != null) {
+            cours.setNom(nom);
+        }
+
+        if (description != null) {
+            cours.setDescription(description);
+        }
+
+        if (datedebut != null) {
+            cours.setDatedebut(datedebut);
+        }
+
+        if (datefin != null) {
+            cours.setDatefin(datefin);
+        }
+
+
+        try {
+            if (fichier != null && !fichier.isEmpty()) {
+                byte[] fichierBytes = fichier.getBytes();
+                cours.setFichier(fichierBytes);
+            }
+
+            Cours updatedCours = coursRepository.save(cours);
+            return ResponseEntity.ok(updatedCours);
+        } catch (Exception e) {
+            // Gérer l'exception, par exemple, la journaliser
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     } else {
         return ResponseEntity.notFound().build();
     }
 }
+
 
     @DeleteMapping("/delete/{id}")
     void deleteCours(@PathVariable String id) {
