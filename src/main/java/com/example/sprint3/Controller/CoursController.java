@@ -3,6 +3,7 @@ package com.example.sprint3.Controller;
 import com.example.sprint3.DAO.CoursRepository;
 import com.example.sprint3.Entity.Cours;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/cours")
 public class CoursController {
     private final CoursRepository coursRepository;
@@ -21,6 +23,14 @@ public class CoursController {
     @Autowired
     public CoursController(CoursRepository coursRepository) {
         this.coursRepository = coursRepository;
+    }
+    @GetMapping("/coursByMatiere/{matiereId}")
+    public ResponseEntity<List<Cours>> getCoursByMatiere(@PathVariable String matiereId) {
+        List<Cours> cours = coursRepository.findByidMatiere(matiereId);
+        if (cours.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(cours);
     }
 
     // get
@@ -38,15 +48,21 @@ public class CoursController {
 
 
     //post ajouts d'un cours
+
     @PostMapping("/ajouterCours/{idMatiere}")
     public ResponseEntity<String> ajouterCours(
-            @RequestParam("datedebut") Date datedebut,
+            @RequestParam("datedebut") @DateTimeFormat(pattern = "yyyy-MM-dd") Date datedebut,
+
             @RequestParam("nom") String nom,
             @PathVariable String idMatiere,
             @RequestParam("description") String description,
             @RequestParam(name = "fichier", required = false) MultipartFile fichier
     ) {
         try {
+            if (nom == null || nom.trim().isEmpty() || description == null || description.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Le nom et la description sont obligatoires.");
+            }
+
             Cours cours = new Cours();
             cours.setNom(nom);
             cours.setDescription(description);
@@ -54,8 +70,6 @@ public class CoursController {
             cours.setIdMatiere(idMatiere);
             if (fichier != null && !fichier.isEmpty()) {
                 byte[] fichierBytes = fichier.getBytes();
-                // Your code to process the file bytes goes here
-                // For example, save the bytes to the database or perform other operations
                 cours.setFichier(fichierBytes);
             }
 

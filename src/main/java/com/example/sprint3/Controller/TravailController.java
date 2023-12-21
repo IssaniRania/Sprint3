@@ -4,7 +4,6 @@ import com.example.sprint3.DAO.CoursRepository;
 import com.example.sprint3.DAO.TravailRepository;
 import com.example.sprint3.Entity.Cours;
 import com.example.sprint3.Entity.Travail;
-import com.example.sprint3.Service.CoursService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
