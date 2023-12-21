@@ -38,11 +38,11 @@ public class CoursController {
 
 
     //post ajouts d'un cours
-    @PostMapping("/ajouterCours")
+    @PostMapping("/ajouterCours/{idMatiere}")
     public ResponseEntity<String> ajouterCours(
             @RequestParam("datedebut") Date datedebut,
-            @RequestParam("datefin") Date datefin,
             @RequestParam("nom") String nom,
+            @PathVariable String idMatiere,
             @RequestParam("description") String description,
             @RequestParam(name = "fichier", required = false) MultipartFile fichier
     ) {
@@ -51,7 +51,7 @@ public class CoursController {
             cours.setNom(nom);
             cours.setDescription(description);
             cours.setDatedebut(datedebut);
-            cours.setDatefin(datefin);
+            cours.setIdMatiere(idMatiere);
             if (fichier != null && !fichier.isEmpty()) {
                 byte[] fichierBytes = fichier.getBytes();
                 // Your code to process the file bytes goes here
@@ -93,9 +93,9 @@ public class CoursController {
             cours.setDatedebut(datedebut);
         }
 
-        if (datefin != null) {
-            cours.setDatefin(datefin);
-        }
+//        if (datefin != null) {
+//            cours.setDatefin(datefin);
+//        }
 
 
         try {

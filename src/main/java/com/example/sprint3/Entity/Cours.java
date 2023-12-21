@@ -1,16 +1,13 @@
 package com.example.sprint3.Entity;
 
+
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.Transient;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.rest.core.config.Projection;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
-import javax.annotation.processing.Generated;
-import java.io.IOException;
 import java.util.Date;
 
 @Document(collection = "cours")
@@ -20,27 +17,11 @@ public class Cours {
     private String id;
     private String nom;
     private String description;
+
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private Date datedebut;
-    private Date datefin;
-
-    public Date getDatedebut() {
-        return datedebut;
-    }
-
-    public void setDatedebut(Date datedebut) {
-        this.datedebut = datedebut;
-    }
-
-    public Date getDatefin() {
-        return datefin;
-    }
-
-    public void setDatefin(Date datefin) {
-        this.datefin = datefin;
-    }
-
     private byte[] fichier;
+    private String idMatiere;
 
     public String getId() {
         return id;
@@ -66,6 +47,22 @@ public class Cours {
         this.description = description;
     }
 
+    public Date getDatedebut() {
+        return datedebut;
+    }
+
+    public void setDatedebut(Date datedebut) {
+        this.datedebut = datedebut;
+    }
+
+//    public Date getDatefin() {
+//        return datefin;
+//    }
+//
+//    public void setDatefin(Date datefin) {
+//        this.datefin = datefin;
+//    }
+
     public byte[] getFichier() {
         return fichier;
     }
@@ -74,9 +71,18 @@ public class Cours {
         this.fichier = fichier;
     }
 
-    @Projection(name = "fullCours",types = Cours.class)
-    interface CoursProjection extends Projection{
-        public Long getId();
-        public String getNom();
+    public String getIdMatiere() {
+        return idMatiere;
+    }
+
+    public void setIdMatiere(String idMatiere) {
+        this.idMatiere = idMatiere;
+    }
+// Getters and setters
+
+    @Projection(name = "fullCours", types = Cours.class)
+    interface CoursProjection extends Projection {
+        String getId();
+        String getNom();
     }
 }
