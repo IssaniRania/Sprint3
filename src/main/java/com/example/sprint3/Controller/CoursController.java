@@ -4,8 +4,10 @@ import com.example.sprint3.DAO.CoursRepository;
 import com.example.sprint3.Entity.Cours;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -149,7 +151,24 @@ public class CoursController {
             e.printStackTrace();
         }
     }
+    @GetMapping("/download/{id}")
+    public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String id) throws IOException {
+        Optional<Cours> coursOptional = coursRepository.findById(id);
 
+        if (coursOptional.isPresent() && coursOptional.get().getFichier() != null) {
+            byte[] fichierBytes = coursOptional.get().getFichier();
+
+            // Utilisation de ByteArrayResource pour créer la ressource
+            ByteArrayResource resource = new ByteArrayResource(fichierBytes);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + coursOptional.get().getNom() + ".pdf\"")
+                    .body(resource);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
 
