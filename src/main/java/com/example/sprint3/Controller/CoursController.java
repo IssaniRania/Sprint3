@@ -12,14 +12,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 @RestController
@@ -27,6 +27,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/cours")
 public class CoursController {
     private final CoursRepository coursRepository;
+    @Autowired
+    private RestTemplate restTemplate;
+
 
     @Autowired
     public CoursController(CoursRepository coursRepository) {
@@ -103,6 +106,14 @@ public class CoursController {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Erreur lors de l'ajout du cours : " + e.getMessage());
         }
+    }
+    public void lierCoursAClasse(String coursId, String classeId) {
+        String url = "http://localhost:3000/lier-cours";
+        Map<String, String> requestBody = new HashMap<>();
+        requestBody.put("coursId", coursId);
+        requestBody.put("classeId", classeId);
+
+        restTemplate.postForObject(url, requestBody, String.class);
     }
     @PutMapping("/updateCours/{id}")
     public ResponseEntity<Cours> replaceCours(
