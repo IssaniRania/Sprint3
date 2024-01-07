@@ -26,6 +26,14 @@ public class TravailController {
     }
 
     // get
+    @GetMapping("/TravailByEleve/{idEleve}")
+    public ResponseEntity<List<Travail>> getTravailByEleve(@PathVariable String idEleve) {
+        List<Travail> travail = travailRepository.findByidEleve(idEleve);
+        if (travail.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(travail);
+    }
     @GetMapping
     public List<Travail> getAlltravails() {
         return travailRepository.findAll();
@@ -37,14 +45,16 @@ public class TravailController {
         Optional<Travail> travail= travailRepository.findById(id);
         return travail.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-//post
-    @PostMapping("/ajouterTravail")
+//post@PostMapping("/ajouterCours/{idMatiere}")
+    @PostMapping("/ajouterTravail/{idEleve}")
     public ResponseEntity<String> ajouterCours(
             @RequestParam("title") String title,
+            @PathVariable String idEleve,
             @RequestParam(name = "fichier", required = false) MultipartFile fichier
     ) {
         try {
                 Travail travails = new Travail();
+                travails.setIdEleve(idEleve);
                 travails.setTitle(title);
             if (fichier != null && !fichier.isEmpty()) {
                 byte[] fichierBytes = fichier.getBytes();

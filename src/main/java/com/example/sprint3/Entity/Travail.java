@@ -9,6 +9,15 @@ public class Travail {
     @Id
     private String id;
     private String title;
+    private String idEleve;
+
+    public String getIdEleve() {
+        return idEleve;
+    }
+
+    public void setIdEleve(String idEleve) {
+        this.idEleve = idEleve;
+    }
 
     public String getTitle() {
         return title;
